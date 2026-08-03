@@ -34,15 +34,27 @@ test("renders the portfolio with video inside the hero", async () => {
   assert.doesNotMatch(html, /进入作品集/);
 });
 
-test("renders the complete portfolio framework", async () => {
-  const response = await render("/portfolio");
-  assert.equal(response.status, 200);
-  const html = await response.text();
+test("keeps the portfolio only at the root route", async () => {
+  const rootResponse = await render("/");
+  assert.equal(rootResponse.status, 200);
+  const html = await rootResponse.text();
   assert.match(html, /让复杂业务，变成清晰而[\s\S]*有价值的产品体验/);
   assert.match(html, /个人经历/);
   assert.match(html, /精选项目/);
   assert.match(html, /个人优势/);
   assert.match(html, /联系我/);
+
+  const response = await render("/portfolio");
+  assert.equal(response.status, 404);
+});
+
+test("ships without unused database tooling", async () => {
+  const packageJson = JSON.parse(
+    await readFile(new URL("../package.json", import.meta.url), "utf8"),
+  );
+  assert.equal(packageJson.dependencies?.["drizzle-orm"], undefined);
+  assert.equal(packageJson.devDependencies?.["drizzle-kit"], undefined);
+  assert.equal(packageJson.scripts?.["db:generate"], undefined);
 });
 
 test("places strengths below hero and exposes contact copy controls", async () => {

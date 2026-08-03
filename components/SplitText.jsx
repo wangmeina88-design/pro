@@ -27,19 +27,18 @@ const SplitText = ({
   const ref = useRef(null);
   const animationCompletedRef = useRef(false);
   const onCompleteRef = useRef(onLetterAnimationComplete);
-  const [fontsLoaded, setFontsLoaded] = useState(false);
+  const [fontsLoaded, setFontsLoaded] = useState(
+    () => typeof document !== 'undefined' && document.fonts.status === 'loaded'
+  );
 
   useEffect(() => {
     onCompleteRef.current = onLetterAnimationComplete;
   }, [onLetterAnimationComplete]);
 
   useEffect(() => {
-    if (document.fonts.status === 'loaded') {
-      setFontsLoaded(true);
-      return;
-    }
+    if (fontsLoaded) return;
     document.fonts.ready.then(() => setFontsLoaded(true));
-  }, []);
+  }, [fontsLoaded]);
 
   useGSAP(
     () => {

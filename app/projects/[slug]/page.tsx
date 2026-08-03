@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProjectBySlug, projects } from "../../../lib/projects";
 import "../project-detail.css";
@@ -22,9 +23,9 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
   return (
     <main className="project-detail-page">
       <nav className="project-detail-nav">
-        <a className="brand" href="/#top">WMN<span>°</span></a>
-        <a href="/#projects">返回精选项目</a>
-        <a href="/">返回首页</a>
+        <Link className="brand" href="/#top">WMN<span>°</span></Link>
+        <Link href="/#projects">返回精选项目</Link>
+        <Link href="/">返回首页</Link>
       </nav>
 
       <header className="project-detail-header">
@@ -45,9 +46,9 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
       </section>
 
       <nav className="project-detail-pagination" aria-label="项目切换">
-        <a href={previous.url}><span>上一个项目</span><strong>{previous.title}</strong></a>
-        <a className="project-detail-back" href="/#projects">返回精选项目</a>
-        <a href={next.url}><span>下一个项目</span><strong>{next.title}</strong></a>
+        <Link href={previous.url}><span>上一个项目</span><strong>{previous.title}</strong></Link>
+        <Link className="project-detail-back" href="/#projects">返回精选项目</Link>
+        <Link href={next.url}><span>下一个项目</span><strong>{next.title}</strong></Link>
       </nav>
     </main>
   );

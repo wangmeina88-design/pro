@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import test from "node:test";
 
 async function render(pathname) {
@@ -32,6 +32,17 @@ test("renders the portfolio with video inside the hero", async () => {
   assert.match(html, /让复杂业务，变成清晰而[\s\S]*有价值的产品体验/);
   assert.match(html, /精选项目/);
   assert.doesNotMatch(html, /进入作品集/);
+});
+
+test("keeps GSAP out of the server-rendering bundle", async () => {
+  const assets = await readdir(
+    new URL("../dist/server/ssr/assets/", import.meta.url),
+  );
+  assert.equal(
+    assets.some((name) => name.startsWith("gsap-")),
+    false,
+    "GSAP starts a timer during Cloudflare Worker initialization",
+  );
 });
 
 test("keeps the portfolio only at the root route", async () => {

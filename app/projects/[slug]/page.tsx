@@ -23,9 +23,11 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
   return (
     <main className="project-detail-page">
       <nav className="project-detail-nav">
-        <Link className="brand" href="/#top">WMN<span>°</span></Link>
-        <Link href="/#projects">返回精选项目</Link>
-        <Link href="/">返回首页</Link>
+        <div className="project-detail-nav-inner section-shell">
+          <Link className="brand" href="/#top">WMN<span>°</span></Link>
+          <Link href="/#projects">返回精选项目</Link>
+          <Link href="/">返回首页</Link>
+        </div>
       </nav>
 
       <header className="project-detail-header">

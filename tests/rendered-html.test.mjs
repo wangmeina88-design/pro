@@ -29,7 +29,7 @@ test("renders the portfolio with video inside the hero", async () => {
   const html = await response.text();
   assert.match(html, /王美娜/);
   assert.match(html, /intro\.mp4/);
-  assert.match(html, /让复杂业务，变成清晰而[\s\S]*有价值的产品体验/);
+  assert.match(html, /让复杂业务，[\s\S]*变成清晰而[\s\S]*有价值的产品体验/);
   assert.match(html, /精选项目/);
   assert.doesNotMatch(html, /进入作品集/);
 });
@@ -49,7 +49,7 @@ test("keeps the portfolio only at the root route", async () => {
   const rootResponse = await render("/");
   assert.equal(rootResponse.status, 200);
   const html = await rootResponse.text();
-  assert.match(html, /让复杂业务，变成清晰而[\s\S]*有价值的产品体验/);
+  assert.match(html, /让复杂业务，[\s\S]*变成清晰而[\s\S]*有价值的产品体验/);
   assert.match(html, /个人经历/);
   assert.match(html, /精选项目/);
   assert.match(html, /个人优势/);
@@ -118,6 +118,50 @@ test("renders projects as a horizontal ChromaGrid rail", async () => {
   assert.match(html, /data-chroma-grid="horizontal"/);
   assert.equal((html.match(/class="chroma-card"/g) ?? []).length, 10);
   assert.match(html, /aria-label="横向浏览精选项目"/);
+});
+
+test("uses the shared content width for home and project navigation", async () => {
+  const home = await (await render("/")).text();
+  const detail = await (await render("/projects/wuge-miracle")).text();
+  assert.match(home, /class="site-nav"[\s\S]*class="site-nav-inner section-shell"/);
+  assert.match(detail, /class="project-detail-nav"[\s\S]*class="project-detail-nav-inner section-shell"/);
+});
+
+test("orders the five primary projects without content duplication", async () => {
+  const html = await (await render("/")).text();
+  const primary = html.match(/data-project-group="primary"[^>]*>([\s\S]*?)data-project-group="duplicate"/)?.[1] ?? "";
+  const titles = ["吴歌陪伴体验升级", "星海情绪助手", "APa 网校系统", "复华财富", "AI 赋能产品体验"];
+  assert.equal((primary.match(/class="chroma-card"/g) ?? []).length, 5);
+  titles.forEach((title, index) => {
+    assert.match(primary, new RegExp(title));
+    if (index) assert.ok(primary.indexOf(title) > primary.indexOf(titles[index - 1]));
+  });
+});
+
+test("adds restrained decorative strength numbers and a constrained hero title", async () => {
+  const html = await (await render("/")).text();
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.equal((html.match(/class="strength-number"/g) ?? []).length, 4);
+  assert.match(html, /<h1 class="hero-title">让复杂业务，变成清晰而<br\/>有价值的产品体验。<\/h1>/);
+  assert.match(css, /\.portfolio-hero \.hero-title\{[^}]*line-height:1\.12/);
+  assert.match(css, /\.strength-card article \.strength-number\{[^}]*font-family:"Arial Narrow"[^}]*font-size:clamp\(48px,4\.8vw,68px\)[^}]*linear-gradient\(180deg,rgba\(255,255,255,\.5\),rgba\(255,255,255,\.08\)\)/);
+});
+
+test("keeps the transition from hero to strengths compact", async () => {
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(css, /\.strengths\{padding-top:88px\}/);
+  assert.match(css, /\.strengths \.strength-grid\{margin-top:48px\}/);
+});
+
+test("removes section indices and the sticky navigation black filter block", async () => {
+  const html = await (await render("/")).text();
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  const navCss = await readFile(new URL("../components/GooeyNav.css", import.meta.url), "utf8");
+  assert.equal((html.match(/class="section-index"/g) ?? []).length, 0);
+  assert.match(css, /\.section-heading\{grid-template-columns:1fr auto\}/);
+  assert.match(css, /\.portfolio-hero \.hero-title\{[^}]*font-size:clamp\(40px,4\.2vw,60px\)/);
+  assert.match(css, /\.contact h2\{[^}]*font-size:clamp\(42px,5\.5vw,82px\)/);
+  assert.match(navCss, /\.site-nav \.gooey-nav-container \.effect\.filter::before\s*\{[^}]*display:\s*none/);
 });
 
 test("renders colorful auto-scrolling projects without a visible scrollbar", async () => {

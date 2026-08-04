@@ -26,19 +26,21 @@ export default function PortfolioPage() {
   return (
     <main className="portfolio-page">
       <nav className="site-nav">
-        <a className="brand" href="#top">WMN<span>°</span></a>
-        <div className="nav-links">
-          <GooeyNav
-            items={navItems}
-            particleCount={10}
-            particleDistances={[42, 7]}
-            particleR={62}
-            animationTime={480}
-            timeVariance={180}
-            colors={[1, 2, 1, 3, 2]}
-          />
+        <div className="site-nav-inner section-shell">
+          <a className="brand" href="#top">WMN<span>°</span></a>
+          <div className="nav-links">
+            <GooeyNav
+              items={navItems}
+              particleCount={10}
+              particleDistances={[42, 7]}
+              particleR={62}
+              animationTime={480}
+              timeVariance={180}
+              colors={[1, 2, 1, 3, 2]}
+            />
+          </div>
+          <a className="nav-contact" href="/media/王美娜-简历.pdf" download>下载简历 <span aria-hidden="true">↓</span></a>
         </div>
-        <a className="nav-contact" href="/media/王美娜-简历.pdf" download>下载简历 <span aria-hidden="true">↓</span></a>
       </nav>
 
       <section className="portfolio-hero" id="top">
@@ -57,7 +59,7 @@ export default function PortfolioPage() {
         />
         <div className="hero-content section-shell">
           <p className="eyebrow">SENIOR UI / UX DESIGNER · BEIJING</p>
-          <h1>让复杂业务，变成清晰而<br />有价值的产品体验。</h1>
+          <h1 className="hero-title">让复杂业务，变成清晰而<br />有价值的产品体验。</h1>
           <div className="hero-bottom">
             <p>我是王美娜，一名拥有 8 年经验的 UI/UX 设计师。专注 B 端与 C 端产品体验，通过用户洞察、业务分析与快速验证，将复杂需求转化为可落地的设计方案。</p>
             <a className="round-link" href="#about" aria-label="继续浏览个人经历">↓</a>
@@ -66,7 +68,7 @@ export default function PortfolioPage() {
       </section>
 
       <section className="strengths section-shell" id="strengths">
-        <div className="section-heading"><span>01</span><h2>个人优势</h2><p>HOW I WORK</p></div>
+        <div className="section-heading"><h2>个人优势</h2><p>HOW I WORK</p></div>
         <div className="strength-grid">
           {strengths.map(([number, title, description]) => (
             <BorderGlow
@@ -83,7 +85,7 @@ export default function PortfolioPage() {
               colors={["#6B8CFF", "#8B7CFF", "#58C4DC"]}
               fillOpacity={0.22}
             >
-              <article><span>{number}</span><h3>{title}</h3><p>{description}</p></article>
+              <article><span className="strength-number">{number}</span><h3>{title}</h3><p>{description}</p></article>
             </BorderGlow>
           ))}
         </div>
@@ -91,7 +93,7 @@ export default function PortfolioPage() {
       </section>
 
       <section className="about section-shell" id="about">
-        <div className="section-heading"><span>02</span><h2>个人经历</h2><p>ABOUT & EXPERIENCE</p></div>
+        <div className="section-heading"><h2>个人经历</h2><p>ABOUT & EXPERIENCE</p></div>
         <div className="about-grid">
           <figure className="profile-frame"><img src="/media/profile.png" alt="王美娜个人照片" /></figure>
           <div className="about-copy">
@@ -109,7 +111,7 @@ export default function PortfolioPage() {
       </section>
 
       <section className="projects section-shell" id="projects">
-        <div className="section-heading"><span>03</span><h2>精选项目</h2><p>SELECTED WORKS</p></div>
+        <div className="section-heading"><h2>精选项目</h2><p>SELECTED WORKS</p></div>
         <ChromaGrid items={projects} className="chroma-project-rail" radius={340} damping={0.35} fadeOut={0.5} />
       </section>
 

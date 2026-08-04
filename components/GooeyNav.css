@@ -150,6 +150,10 @@
   background: black;
 }
 
+.site-nav .gooey-nav-container .effect.filter::before {
+  display: none;
+}
+
 .gooey-nav-container .effect.filter::after {
   content: '';
   position: absolute;

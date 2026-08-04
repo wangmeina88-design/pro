@@ -124,7 +124,7 @@
   margin: 0;
   overflow-x: auto;
   overflow-y: hidden;
-  scroll-snap-type: x mandatory;
+  scroll-snap-type: none;
   scrollbar-width: none;
   -ms-overflow-style: none;
   overscroll-behavior-inline: contain;
@@ -143,7 +143,6 @@
   flex: 0 0 clamp(300px, 43vw, 620px);
   width: clamp(300px, 43vw, 620px);
   min-height: 390px;
-  scroll-snap-align: start;
   border-color: rgba(255, 255, 255, .12);
 }
 

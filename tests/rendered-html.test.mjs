@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFile, readdir } from "node:fs/promises";
+import { readFile, readdir, stat } from "node:fs/promises";
 import test from "node:test";
 
 async function render(pathname) {
@@ -98,11 +98,16 @@ test("uses the correctly cropped personal portrait", async () => {
   assert.equal(png.readUInt32BE(20), 501);
 });
 
-test("renders the SplashCursor effect inside the hero", async () => {
+test("renders SplashCursor as a non-interactive global viewport layer", async () => {
   const response = await render("/");
   const html = await response.text();
-  assert.match(html, /data-splash-cursor="hero"/);
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(html, /data-splash-cursor="global"/);
+  assert.match(html, /class="global-splash-cursor"/);
   assert.match(html, /id="fluid"/);
+  assert.match(css, /\.global-splash-cursor\{[^}]*position:fixed[^}]*inset:0[^}]*pointer-events:none/);
+  assert.match(css, /@media\(prefers-reduced-motion:reduce\)\{\.global-splash-cursor\{display:none\}\}/);
+  assert.match(css, /@media\(hover:none\) and \(pointer:coarse\)\{\.global-splash-cursor\{display:none\}\}/);
 });
 
 test("applies MagicBento hover interactions to experience cards", async () => {
@@ -138,6 +143,23 @@ test("orders the five primary projects without content duplication", async () =>
   });
 });
 
+test("uses compressed project covers at the established public URLs", async () => {
+  const covers = [
+    "wuge-miracle.jpg",
+    "starry-miracle.jpg",
+    "apa-school.jpg",
+    "forise-wealth.jpg",
+    "ai-experience.jpg",
+  ];
+  const projectSource = await readFile(new URL("../lib/projects.ts", import.meta.url), "utf8");
+
+  for (const cover of covers) {
+    const coverStat = await stat(new URL(`../public/media/projects/${cover}`, import.meta.url));
+    assert.ok(coverStat.size < 500_000, `${cover} should stay below 500 KB`);
+    assert.match(projectSource, new RegExp(`/media/projects/${cover.replace(".", "\\.")}`));
+  }
+});
+
 test("adds restrained decorative strength numbers and a constrained hero title", async () => {
   const html = await (await render("/")).text();
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
@@ -147,10 +169,13 @@ test("adds restrained decorative strength numbers and a constrained hero title",
   assert.match(css, /\.strength-card article \.strength-number\{[^}]*font-family:"Arial Narrow"[^}]*font-size:clamp\(48px,4\.8vw,68px\)[^}]*linear-gradient\(180deg,rgba\(255,255,255,\.5\),rgba\(255,255,255,\.08\)\)/);
 });
 
-test("keeps the transition from hero to strengths compact", async () => {
+test("uses compact responsive spacing between all major sections", async () => {
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
-  assert.match(css, /\.strengths\{padding-top:88px\}/);
+  assert.match(css, /\.strengths,\.about,\.projects\{padding-top:72px\}/);
+  assert.match(css, /\.contact\{margin-top:90px\}/);
   assert.match(css, /\.strengths \.strength-grid\{margin-top:48px\}/);
+  assert.match(css, /@media\(max-width:767px\)\{\.strengths,\.about,\.projects\{padding-top:56px\}\.contact\{margin-top:64px\}\}/);
+  assert.match(css, /\.portfolio-hero\{position:relative;min-height:calc\(100svh - 74px\)/);
 });
 
 test("removes section indices and the sticky navigation black filter block", async () => {

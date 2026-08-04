@@ -25,6 +25,15 @@ const navItems = [
 export default function PortfolioPage() {
   return (
     <main className="portfolio-page">
+      <SplashCursor
+        DYE_RESOLUTION={512}
+        DENSITY_DISSIPATION={4.2}
+        VELOCITY_DISSIPATION={2.4}
+        SPLAT_RADIUS={0.12}
+        SPLAT_FORCE={4200}
+        RAINBOW_MODE={false}
+        COLOR="#6B8CFF"
+      />
       <nav className="site-nav">
         <div className="site-nav-inner section-shell">
           <a className="brand" href="#top">WMN<span>°</span></a>
@@ -48,15 +57,6 @@ export default function PortfolioPage() {
           <source src="/media/intro.mp4" type="video/mp4" />
         </video>
         <div className="hero-shade" />
-        <SplashCursor
-          DYE_RESOLUTION={512}
-          DENSITY_DISSIPATION={4.2}
-          VELOCITY_DISSIPATION={2.4}
-          SPLAT_RADIUS={0.12}
-          SPLAT_FORCE={4200}
-          RAINBOW_MODE={false}
-          COLOR="#6B8CFF"
-        />
         <div className="hero-content section-shell">
           <p className="eyebrow">SENIOR UI / UX DESIGNER · BEIJING</p>
           <h1 className="hero-title">让复杂业务，变成清晰而<br />有价值的产品体验。</h1>

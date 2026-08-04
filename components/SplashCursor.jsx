@@ -1060,17 +1060,8 @@ function SplashCursor({
 
   return (
     <div
-      className="hero-splash-cursor"
-      data-splash-cursor="hero"
-      style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        zIndex: 1,
-        pointerEvents: 'none',
-        width: '100%',
-        height: '100%'
-      }}
+      className="global-splash-cursor"
+      data-splash-cursor="global"
     >
       <canvas
         ref={canvasRef}
